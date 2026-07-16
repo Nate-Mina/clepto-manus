@@ -24,18 +24,18 @@
 
 ## AI/Detection Features
 
-- [ ] Integrate AI-powered detection API (mock or real)
-- [ ] Implement real-time alert notifications
-- [ ] Create incident clip playback functionality
-- [ ] Add confidence score display and visualization
-- [ ] Implement behavior detection labels (concealment, unusual movement, etc.)
+- [x] Integrate AI-powered detection API (mock or real)
+- [x] Implement real-time alert notifications
+- [x] Create incident clip playback functionality
+- [x] Add confidence score display and visualization
+- [x] Implement behavior detection labels (concealment, unusual movement, etc.)
 
 ## Data Management
 
-- [ ] Set up local data storage for incidents (AsyncStorage)
-- [ ] Implement incident data model and schema
-- [ ] Create incident filtering and search logic
-- [ ] Implement evidence log persistence
+- [x] Set up local data storage for incidents (AsyncStorage)
+- [x] Implement incident data model and schema
+- [x] Create incident filtering and search logic
+- [x] Implement evidence log persistence
 - [ ] Add export/sharing functionality
 
 ## Notifications & Alerts
@@ -43,14 +43,14 @@
 - [ ] Set up push notification system
 - [ ] Implement alert sound and vibration feedback
 - [ ] Create notification permission handling
-- [ ] Add notification preference settings
+- [x] Add notification preference settings
 
 ## Camera Integration
 
-- [ ] Implement camera selection dropdown/carousel
-- [ ] Add live feed display capability
+- [x] Implement camera selection dropdown/carousel
+- [x] Add live feed display capability
 - [ ] Create detection overlay visualization
-- [ ] Implement camera status indicators
+- [x] Implement camera status indicators
 
 ## Testing & Polish
 

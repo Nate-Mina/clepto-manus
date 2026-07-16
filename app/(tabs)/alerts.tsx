@@ -1,5 +1,7 @@
 import { ScrollView, Text, View, TouchableOpacity, FlatList } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
+import { useDetection } from "@/lib/incident-context";
+import { useRouter } from "expo-router";
 
 /**
  * Alerts Screen - Real-time incident notifications
@@ -8,8 +10,19 @@ import { ScreenContainer } from "@/components/screen-container";
  * timestamps, and incident previews. Users can tap to view details.
  */
 export default function AlertsScreen() {
-  // Mock incident data
-  const incidents = [
+  const router = useRouter();
+  const detection = useDetection();
+
+  // Use incidents from context, or show mock data if empty
+  const incidents = detection.incidents.length > 0 ? detection.incidents.map((inc) => ({
+    id: inc.id,
+    timestamp: `${Math.round((Date.now() - inc.timestamp.getTime()) / 60000)} minutes ago`,
+    camera: inc.camera,
+    behavior: inc.behavior,
+    confidence: inc.confidence,
+    severity: inc.confidence > 80 ? "high" : inc.confidence > 60 ? "medium" : "low",
+    preview: "🎥",
+  })) : [
     {
       id: "1",
       timestamp: "2 minutes ago",
@@ -78,6 +91,7 @@ export default function AlertsScreen() {
     <TouchableOpacity
       className="bg-surface rounded-xl p-4 mb-3 border border-border flex-row items-start gap-4 active:opacity-70"
       activeOpacity={0.7}
+      onPress={() => router.push("/(tabs)/incident-detail")}
     >
       {/* Preview Thumbnail */}
       <View className="w-16 h-16 bg-muted/20 rounded-lg items-center justify-center">

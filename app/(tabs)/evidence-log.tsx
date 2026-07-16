@@ -1,5 +1,6 @@
 import { ScrollView, Text, View, TouchableOpacity, FlatList } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
+import { useDetection } from "@/lib/incident-context";
 
 /**
  * Evidence Log Screen - Historical record of all incidents
@@ -8,8 +9,17 @@ import { ScreenContainer } from "@/components/screen-container";
  * dates, status badges, and export options.
  */
 export default function EvidenceLogScreen() {
-  // Mock evidence data
-  const evidenceItems = [
+  const detection = useDetection();
+
+  // Convert incidents from context to evidence items
+  const evidenceItems = detection.incidents.length > 0 ? detection.incidents.map((inc) => ({
+    id: inc.id,
+    date: inc.timestamp.toLocaleString(),
+    camera: inc.camera,
+    behavior: inc.behavior,
+    status: inc.verified ? "verified" : "pending",
+    confidence: inc.confidence,
+  })) : [
     {
       id: "1",
       date: "Today, 2:35 PM",
@@ -105,6 +115,7 @@ export default function EvidenceLogScreen() {
         item.status
       )}`}
       activeOpacity={0.7}
+      onPress={() => {}}
     >
       {/* Thumbnail */}
       <View className="w-14 h-14 bg-muted/20 rounded-lg items-center justify-center">

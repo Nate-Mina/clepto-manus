@@ -1,6 +1,7 @@
 import { ScrollView, Text, View, TouchableOpacity, Switch } from "react-native";
 import { useState } from "react";
 import { ScreenContainer } from "@/components/screen-container";
+import { useRouter } from "expo-router";
 
 /**
  * Settings Screen - App configuration and preferences
@@ -9,6 +10,7 @@ import { ScreenContainer } from "@/components/screen-container";
  * app information, and account settings.
  */
 export default function SettingsScreen() {
+  const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
@@ -150,7 +152,10 @@ export default function SettingsScreen() {
           </View>
 
           {/* Logout Button */}
-          <TouchableOpacity className="bg-error/10 border border-error/20 rounded-xl p-4 flex-row items-center justify-center gap-2">
+          <TouchableOpacity
+            className="bg-error/10 border border-error/20 rounded-xl p-4 flex-row items-center justify-center gap-2"
+            onPress={() => router.push("/(tabs)")}
+          >
             <Text className="text-error font-semibold">🚪 Logout</Text>
           </TouchableOpacity>
         </View>

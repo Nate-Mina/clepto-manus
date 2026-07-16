@@ -1,5 +1,7 @@
 import { ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
+import { useDetection } from "@/lib/incident-context";
+import { useRouter } from "expo-router";
 
 /**
  * Incident Detail Screen - View specific incident with video clip
@@ -8,8 +10,24 @@ import { ScreenContainer } from "@/components/screen-container";
  * behavior details, and action buttons for verification or dismissal.
  */
 export default function IncidentDetailScreen() {
-  // Mock incident data
-  const incident = {
+  const router = useRouter();
+  const detection = useDetection();
+
+  // Get the most recent incident or use mock data
+  const mostRecentIncident = detection.incidents[0];
+  const incident = mostRecentIncident ? {
+    id: mostRecentIncident.id,
+    timestamp: `${Math.round((Date.now() - mostRecentIncident.timestamp.getTime()) / 60000)} minutes ago`,
+    date: mostRecentIncident.timestamp.toLocaleString(),
+    camera: mostRecentIncident.camera,
+    location: "Store Location: Downtown",
+    behavior: mostRecentIncident.behavior,
+    description: mostRecentIncident.description || "Suspicious behavior detected in retail area",
+    confidence: mostRecentIncident.confidence,
+    duration: "2.3 seconds",
+    videoUrl: mostRecentIncident.videoUrl || "https://example.com/video.mp4",
+    verified: mostRecentIncident.verified,
+  } : {
     id: "1",
     timestamp: "2 minutes ago",
     date: "April 1, 2026 at 2:35 PM",
@@ -23,12 +41,25 @@ export default function IncidentDetailScreen() {
     verified: false,
   };
 
+  const handleVerify = () => {
+    if (mostRecentIncident) {
+      detection.verifyIncident(mostRecentIncident.id);
+    }
+  };
+
+  const handleDismiss = () => {
+    if (mostRecentIncident) {
+      detection.dismissIncident(mostRecentIncident.id);
+      router.back();
+    }
+  };
+
   return (
     <ScreenContainer className="p-6 bg-background">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
         <View className="gap-6">
           {/* Back Button */}
-          <TouchableOpacity className="flex-row items-center gap-2 w-12">
+          <TouchableOpacity className="flex-row items-center gap-2 w-12" onPress={() => router.back()}>
             <Text className="text-primary text-lg">←</Text>
             <Text className="text-primary font-semibold">Back</Text>
           </TouchableOpacity>
@@ -84,10 +115,16 @@ export default function IncidentDetailScreen() {
 
           {/* Action Buttons */}
           <View className="gap-3">
-            <TouchableOpacity className="bg-success rounded-xl p-4 flex-row items-center justify-center gap-2">
+            <TouchableOpacity
+              className="bg-success rounded-xl p-4 flex-row items-center justify-center gap-2"
+              onPress={handleVerify}
+            >
               <Text className="text-white font-semibold">✓ Mark as Verified</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="bg-surface border border-border rounded-xl p-4 flex-row items-center justify-center gap-2">
+            <TouchableOpacity
+              className="bg-surface border border-border rounded-xl p-4 flex-row items-center justify-center gap-2"
+              onPress={handleDismiss}
+            >
               <Text className="text-foreground font-semibold">✗ False Alarm</Text>
             </TouchableOpacity>
             <TouchableOpacity className="bg-surface border border-border rounded-xl p-4 flex-row items-center justify-center gap-2">

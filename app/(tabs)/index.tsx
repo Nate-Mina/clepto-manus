@@ -1,6 +1,8 @@
 import { ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { ScreenContainer } from "@/components/screen-container";
+import { useDetection } from "@/lib/incident-context";
+import { useRouter } from "expo-router";
 
 /**
  * Home Screen - Lexius Shoplifting Detection Dashboard
@@ -10,14 +12,20 @@ import { ScreenContainer } from "@/components/screen-container";
  */
 export default function HomeScreen() {
   const colors = useColors();
+  const router = useRouter();
+  const detection = useDetection();
 
-  // Mock data - in production, this would come from API/context
-  const isDetectionActive = true;
-  const activeCameras = 8;
-  const recentIncidents = 3;
-  const lastAlertTime = "2 minutes ago";
-  const dailyIncidents = 12;
-  const weeklyIncidents = 47;
+  // Get data from detection context
+  const isDetectionActive = detection.isDetectionActive;
+  const activeCameras = detection.activeCameras;
+  const recentIncidents = detection.recentIncidents;
+  const dailyIncidents = detection.dailyIncidents;
+  const weeklyIncidents = detection.weeklyIncidents;
+
+  // Format last alert time
+  const lastAlertTime = detection.lastAlertTime
+    ? `${Math.round((Date.now() - detection.lastAlertTime.getTime()) / 60000)} minutes ago`
+    : "No alerts yet"
 
   return (
     <ScreenContainer className="p-6 bg-background">
@@ -93,6 +101,7 @@ export default function HomeScreen() {
             <TouchableOpacity
               className="bg-primary rounded-xl p-4 flex-row items-center justify-between"
               activeOpacity={0.8}
+              onPress={() => router.push("/(tabs)/alerts")}
             >
               <Text className="text-base font-semibold text-white">View Recent Alerts</Text>
               <Text className="text-white text-lg">→</Text>
@@ -100,6 +109,7 @@ export default function HomeScreen() {
             <TouchableOpacity
               className="bg-surface border border-border rounded-xl p-4 flex-row items-center justify-between"
               activeOpacity={0.8}
+              onPress={() => router.push("/(tabs)/live-feed")}
             >
               <Text className="text-base font-semibold text-foreground">Live Camera Feed</Text>
               <Text className="text-foreground text-lg">→</Text>
@@ -107,6 +117,7 @@ export default function HomeScreen() {
             <TouchableOpacity
               className="bg-surface border border-border rounded-xl p-4 flex-row items-center justify-between"
               activeOpacity={0.8}
+              onPress={() => router.push("/(tabs)/evidence-log")}
             >
               <Text className="text-base font-semibold text-foreground">Evidence Log</Text>
               <Text className="text-foreground text-lg">→</Text>
